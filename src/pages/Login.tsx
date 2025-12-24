@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Zap, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,6 +18,7 @@ const Login = () => {
       return;
     }
     toast.success("Login successful! Redirecting...");
+    navigate("/dashboard");
   };
 
   const handleGoogleLogin = () => {
