@@ -9,18 +9,18 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
   Home,
-  LayoutGrid,
-  FolderOpen,
-  BookOpen,
-  Trophy,
+  Building,
+  BarChart3,
   HelpCircle,
+  LogOut,
   Plus,
   Zap,
   DoorOpen,
   Building2,
   House,
   User,
-  Search,
+  Clock,
+  Layers,
 } from "lucide-react";
 
 const Dashboard = () => {
@@ -29,21 +29,27 @@ const Dashboard = () => {
 
   const menuItems = [
     { id: "home", label: "Home", icon: Home },
-    { id: "designs", label: "My Designs", icon: LayoutGrid },
-    { id: "collections", label: "Collections", icon: FolderOpen },
-    { id: "tutorials", label: "Tutorials", icon: BookOpen },
-    { id: "challenges", label: "Challenges", icon: Trophy },
-    { id: "help", label: "Help Center", icon: HelpCircle },
+    { id: "properties", label: "Properties", icon: Building },
+    { id: "analysis", label: "Analysis", icon: BarChart3 },
+    { id: "help", label: "Help", icon: HelpCircle },
   ];
 
-  const recentDesigns = [
-    { id: 1, name: "Living Room Setup", type: "Room", date: "2 days ago" },
-    { id: 2, name: "2BHK Apartment", type: "Apartment", date: "1 week ago" },
-    { id: 3, name: "Villa Layout", type: "House", date: "2 weeks ago" },
-  ];
+  const recentProjects = {
+    lastProperty: { name: "2BHK Apartment - Block A", type: "Apartment", date: "2 hours ago" },
+    lastRoom: { name: "Master Bedroom", type: "Room", date: "Yesterday" },
+  };
+
+  const quickStats = {
+    totalProperties: 5,
+    totalRooms: 12,
+  };
 
   const handleCreate = (type: string) => {
     navigate(`/simulator?type=${type}`);
+  };
+
+  const handleLogout = () => {
+    navigate("/");
   };
 
   return (
@@ -86,22 +92,24 @@ const Dashboard = () => {
             </button>
           ))}
         </nav>
+
+        {/* Logout Button */}
+        <div className="p-4 border-t border-border">
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-destructive hover:bg-destructive/10 transition-all"
+          >
+            <LogOut className="w-5 h-5" />
+            <span className="font-medium">Logout</span>
+          </button>
+        </div>
       </aside>
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col">
         {/* Top Navbar */}
         <header className="h-16 bg-card border-b border-border flex items-center justify-between px-6">
-          <div className="flex items-center gap-4">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <input
-                type="text"
-                placeholder="Search designs..."
-                className="pl-10 pr-4 py-2 bg-muted rounded-lg border border-border text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-            </div>
-          </div>
+          <h1 className="text-xl font-semibold text-foreground">Dashboard</h1>
 
           <div className="flex items-center gap-4">
             {/* Create Button with Dropdown */}
@@ -141,85 +149,105 @@ const Dashboard = () => {
 
         {/* Dashboard Content */}
         <div className="flex-1 p-8 overflow-auto">
-          {/* Welcome Banner */}
-          <div className="bg-gradient-to-r from-primary/20 to-accent/20 rounded-2xl p-8 mb-8 border border-primary/30">
-            <h1 className="text-3xl font-bold text-foreground mb-2">
-              Welcome back, John! ⚡
-            </h1>
-            <p className="text-muted-foreground text-lg">
-              Start designing your space and calculate your electricity costs.
-            </p>
-          </div>
-
-          {/* Quick Actions */}
+          {/* Quick Stats */}
           <section className="mb-8">
-            <h2 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
-              <LayoutGrid className="w-5 h-5 text-primary" />
-              Quick Start
+            <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+              <BarChart3 className="w-5 h-5 text-primary" />
+              Quick Stats
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Create New Card */}
-              <button
-                onClick={() => handleCreate("room")}
-                className="group border-2 border-dashed border-primary/50 rounded-xl p-8 flex flex-col items-center justify-center gap-4 hover:border-primary hover:bg-primary/5 transition-all"
-              >
-                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-all">
-                  <Plus className="w-8 h-8 text-primary" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-card rounded-xl border border-border p-6 flex items-center gap-4">
+                <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <Building className="w-7 h-7 text-primary" />
                 </div>
-                <span className="text-primary font-medium">Create your first design</span>
-              </button>
-
-              {/* Room Card */}
-              <div
-                onClick={() => handleCreate("room")}
-                className="cursor-pointer bg-card rounded-xl border border-border overflow-hidden hover:border-primary/50 hover:shadow-lg transition-all group"
-              >
-                <div className="h-32 bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center">
-                  <DoorOpen className="w-12 h-12 text-primary opacity-50 group-hover:opacity-100 transition-all" />
-                </div>
-                <div className="p-4">
-                  <h3 className="font-semibold text-foreground">Single Room</h3>
-                  <p className="text-sm text-muted-foreground">Quick room setup</p>
+                <div>
+                  <p className="text-sm text-muted-foreground">Total Properties</p>
+                  <p className="text-3xl font-bold text-foreground">{quickStats.totalProperties}</p>
                 </div>
               </div>
-
-              {/* Apartment Card */}
-              <div
-                onClick={() => handleCreate("apartment")}
-                className="cursor-pointer bg-card rounded-xl border border-border overflow-hidden hover:border-primary/50 hover:shadow-lg transition-all group"
-              >
-                <div className="h-32 bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center">
-                  <Building2 className="w-12 h-12 text-accent opacity-50 group-hover:opacity-100 transition-all" />
+              <div className="bg-card rounded-xl border border-border p-6 flex items-center gap-4">
+                <div className="w-14 h-14 rounded-xl bg-accent/10 flex items-center justify-center">
+                  <Layers className="w-7 h-7 text-accent" />
                 </div>
-                <div className="p-4">
-                  <h3 className="font-semibold text-foreground">Apartment</h3>
-                  <p className="text-sm text-muted-foreground">Multi-room layout</p>
+                <div>
+                  <p className="text-sm text-muted-foreground">Total Rooms</p>
+                  <p className="text-3xl font-bold text-foreground">{quickStats.totalRooms}</p>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* Recent Designs */}
-          <section>
-            <h2 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
-              <FolderOpen className="w-5 h-5 text-primary" />
-              Recent Designs
+          {/* Recent Projects */}
+          <section className="mb-8">
+            <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+              <Clock className="w-5 h-5 text-primary" />
+              Recently Accessed
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {recentDesigns.map((design) => (
-                <div
-                  key={design.id}
-                  className="bg-card rounded-xl border border-border p-4 hover:border-primary/50 hover:shadow-lg transition-all cursor-pointer"
-                >
-                  <div className="h-24 bg-muted rounded-lg mb-3 flex items-center justify-center">
-                    {design.type === "Room" && <DoorOpen className="w-8 h-8 text-muted-foreground" />}
-                    {design.type === "Apartment" && <Building2 className="w-8 h-8 text-muted-foreground" />}
-                    {design.type === "House" && <House className="w-8 h-8 text-muted-foreground" />}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Last Opened Property */}
+              <div className="bg-card rounded-xl border border-border p-5 hover:border-primary/50 hover:shadow-lg transition-all cursor-pointer group">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-all">
+                    <Building2 className="w-6 h-6 text-primary" />
                   </div>
-                  <h3 className="font-medium text-foreground truncate">{design.name}</h3>
-                  <p className="text-sm text-muted-foreground">{design.date}</p>
+                  <div className="flex-1">
+                    <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Last Opened Property</p>
+                    <h3 className="font-semibold text-foreground">{recentProjects.lastProperty.name}</h3>
+                    <p className="text-sm text-muted-foreground">{recentProjects.lastProperty.date}</p>
+                  </div>
                 </div>
-              ))}
+              </div>
+
+              {/* Last Opened Room */}
+              <div className="bg-card rounded-xl border border-border p-5 hover:border-primary/50 hover:shadow-lg transition-all cursor-pointer group">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-all">
+                    <DoorOpen className="w-6 h-6 text-accent" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Last Opened Room</p>
+                    <h3 className="font-semibold text-foreground">{recentProjects.lastRoom.name}</h3>
+                    <p className="text-sm text-muted-foreground">{recentProjects.lastRoom.date}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Create New Property */}
+          <section>
+            <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+              <Plus className="w-5 h-5 text-primary" />
+              Create New Property
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* House Card */}
+              <div
+                onClick={() => handleCreate("house")}
+                className="cursor-pointer bg-card rounded-xl border border-border overflow-hidden hover:border-primary/50 hover:shadow-lg transition-all group"
+              >
+                <div className="h-36 bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+                  <House className="w-16 h-16 text-primary opacity-60 group-hover:opacity-100 transition-all" />
+                </div>
+                <div className="p-5">
+                  <h3 className="font-semibold text-foreground text-lg">House</h3>
+                  <p className="text-sm text-muted-foreground">Create a complete house layout with multiple rooms</p>
+                </div>
+              </div>
+
+              {/* Flat/Apartment Card */}
+              <div
+                onClick={() => handleCreate("apartment")}
+                className="cursor-pointer bg-card rounded-xl border border-border overflow-hidden hover:border-accent/50 hover:shadow-lg transition-all group"
+              >
+                <div className="h-36 bg-gradient-to-br from-accent/20 to-accent/5 flex items-center justify-center">
+                  <Building2 className="w-16 h-16 text-accent opacity-60 group-hover:opacity-100 transition-all" />
+                </div>
+                <div className="p-5">
+                  <h3 className="font-semibold text-foreground text-lg">Flat / Apartment</h3>
+                  <p className="text-sm text-muted-foreground">Design your apartment with all rooms and appliances</p>
+                </div>
+              </div>
             </div>
           </section>
         </div>
