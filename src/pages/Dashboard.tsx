@@ -28,10 +28,10 @@ const Dashboard = () => {
   const [activeMenu, setActiveMenu] = useState("home");
 
   const menuItems = [
-    { id: "home", label: "Home", icon: Home },
-    { id: "properties", label: "Properties", icon: Building },
-    { id: "analysis", label: "Analysis", icon: BarChart3 },
-    { id: "help", label: "Help", icon: HelpCircle },
+    { id: "home", label: "Home", icon: Home, path: "/dashboard" },
+    { id: "properties", label: "Properties", icon: Building, path: "/properties" },
+    { id: "analysis", label: "Analysis", icon: BarChart3, path: "/analysis" },
+    { id: "help", label: "Help", icon: HelpCircle, path: "/help" },
   ];
 
   const recentProjects = {
@@ -80,7 +80,10 @@ const Dashboard = () => {
           {menuItems.map((item) => (
             <button
               key={item.id}
-              onClick={() => setActiveMenu(item.id)}
+              onClick={() => {
+                setActiveMenu(item.id);
+                navigate(item.path);
+              }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                 activeMenu === item.id
                   ? "bg-primary text-primary-foreground"
