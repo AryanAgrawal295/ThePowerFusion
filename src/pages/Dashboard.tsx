@@ -125,6 +125,13 @@ const Dashboard = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56 bg-card border-border">
                 <DropdownMenuItem
+                  onClick={() => navigate("/properties")}
+                  className="flex items-center gap-3 py-3 cursor-pointer hover:bg-muted"
+                >
+                  <Building className="w-5 h-5 text-primary" />
+                  <span className="font-medium">Properties</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem
                   onClick={() => handleCreate("room")}
                   className="flex items-center gap-3 py-3 cursor-pointer hover:bg-muted"
                 >
