@@ -131,27 +131,6 @@ const Dashboard = () => {
                   <Building className="w-5 h-5 text-primary" />
                   <span className="font-medium">Properties</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => handleCreate("room")}
-                  className="flex items-center gap-3 py-3 cursor-pointer hover:bg-muted"
-                >
-                  <DoorOpen className="w-5 h-5 text-primary" />
-                  <span className="font-medium">Design a Room</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => handleCreate("apartment")}
-                  className="flex items-center gap-3 py-3 cursor-pointer hover:bg-muted"
-                >
-                  <Building2 className="w-5 h-5 text-primary" />
-                  <span className="font-medium">Design an Apartment</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => handleCreate("house")}
-                  className="flex items-center gap-3 py-3 cursor-pointer hover:bg-muted"
-                >
-                  <House className="w-5 h-5 text-primary" />
-                  <span className="font-medium">Design a House</span>
-                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
