@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Users, TrendingDown, Leaf, Check } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import FeaturesGrid from "@/components/FeaturesGrid";
+import HowItWorks from "@/components/HowItWorks";
+import Pricing from "@/components/Pricing";
 import heroImage from "@/assets/hero-illustration.png";
 
 const Landing = () => {
@@ -90,6 +92,12 @@ const Landing = () => {
 
       {/* Features Grid */}
       <FeaturesGrid />
+
+      {/* How It Works */}
+      <HowItWorks />
+
+      {/* Pricing */}
+      <Pricing />
 
       {/* CTA Section */}
       <section className="py-20 px-6">

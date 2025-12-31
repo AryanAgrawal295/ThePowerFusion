@@ -91,6 +91,7 @@ const Properties = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [roomDialogOpen, setRoomDialogOpen] = useState(false);
+  const [newPropertyDialogOpen, setNewPropertyDialogOpen] = useState(false);
 
   const menuItems = [
     { id: "home", label: "Home", icon: Home, path: "/dashboard" },
@@ -182,7 +183,7 @@ const Properties = () => {
           <h1 className="text-xl font-semibold text-foreground">Properties</h1>
 
           <div className="flex items-center gap-4">
-            <Button onClick={() => navigate("/simulator?type=house")} className="bg-primary hover:bg-primary/90 text-primary-foreground gap-2 px-6">
+            <Button onClick={() => setNewPropertyDialogOpen(true)} className="bg-primary hover:bg-primary/90 text-primary-foreground gap-2 px-6">
               <Plus className="w-5 h-5" />
               New Property
             </Button>
@@ -344,6 +345,55 @@ const Properties = () => {
                 </div>
               </div>
             ))}
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* New Property Type Selection Dialog */}
+      <Dialog open={newPropertyDialogOpen} onOpenChange={setNewPropertyDialogOpen}>
+        <DialogContent className="bg-card border-border max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-center text-xl">Create New Property</DialogTitle>
+          </DialogHeader>
+          
+          <p className="text-center text-muted-foreground text-sm mb-6">
+            Choose the type of property you want to create
+          </p>
+
+          <div className="grid grid-cols-2 gap-4">
+            {/* House Option */}
+            <div
+              onClick={() => {
+                setNewPropertyDialogOpen(false);
+                navigate("/simulator?type=house");
+              }}
+              className="cursor-pointer bg-secondary/30 rounded-xl border border-border p-6 hover:border-primary/50 hover:bg-primary/5 transition-all group text-center"
+            >
+              <div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-all">
+                <House className="w-8 h-8 text-primary" />
+              </div>
+              <h3 className="font-semibold text-foreground">House</h3>
+              <p className="text-xs text-muted-foreground mt-1">
+                Multi-room layout
+              </p>
+            </div>
+
+            {/* Apartment Option */}
+            <div
+              onClick={() => {
+                setNewPropertyDialogOpen(false);
+                navigate("/simulator?type=apartment");
+              }}
+              className="cursor-pointer bg-secondary/30 rounded-xl border border-border p-6 hover:border-accent/50 hover:bg-accent/5 transition-all group text-center"
+            >
+              <div className="w-16 h-16 rounded-xl bg-accent/10 flex items-center justify-center mx-auto mb-4 group-hover:bg-accent/20 transition-all">
+                <Building2 className="w-8 h-8 text-accent" />
+              </div>
+              <h3 className="font-semibold text-foreground">Apartment</h3>
+              <p className="text-xs text-muted-foreground mt-1">
+                Flat / Studio layout
+              </p>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
