@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import Properties from "./pages/Properties";
 import Simulator from "./pages/Simulator";
 import Analysis from "./pages/Analysis";
+import Help from "./pages/Help";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/properties" element={<Properties />} />
           <Route path="/simulator" element={<Simulator />} />
           <Route path="/analysis" element={<Analysis />} />
+          <Route path="/help" element={<Help />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
