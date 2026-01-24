@@ -1,13 +1,15 @@
-import { Link } from "react-router-dom";
+"use client";
+
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Users, TrendingDown, Leaf, Check } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import FeaturesGrid from "@/components/FeaturesGrid";
 import HowItWorks from "@/components/HowItWorks";
 import Pricing from "@/components/Pricing";
-import heroImage from "@/assets/hero-illustration.png";
+import Image from "next/image";
 
-const Landing = () => {
+export default function Landing() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -33,13 +35,13 @@ const Landing = () => {
               </p>
               <div className="flex flex-wrap gap-4">
                 <Button variant="hero" size="xl" asChild>
-                  <Link to="/simulator">
+                  <Link href="/simulator">
                     Start Calculating Now
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
                 <Button variant="glass" size="xl" asChild>
-                  <Link to="/login">Log In</Link>
+                  <Link href="/login">Log In</Link>
                 </Button>
               </div>
 
@@ -78,10 +80,13 @@ const Landing = () => {
             {/* Right Hero Image */}
             <div className="relative animate-float hidden lg:block">
               <div className="relative">
-                <img
-                  src={heroImage}
+                <Image
+                  src="/assets/hero-illustration.png"
                   alt="Power Fusion Smart Home Simulator"
+                  width={600}
+                  height={600}
                   className="w-full max-w-lg mx-auto rounded-2xl"
+                  priority
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
               </div>
@@ -123,7 +128,7 @@ const Landing = () => {
                 </div>
               </div>
               <Button variant="hero" size="xl" asChild>
-                <Link to="/signup">
+                <Link href="/signup">
                   Get Started Free
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
@@ -141,6 +146,4 @@ const Landing = () => {
       </footer>
     </div>
   );
-};
-
-export default Landing;
+}

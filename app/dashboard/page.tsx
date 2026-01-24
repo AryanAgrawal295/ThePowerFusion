@@ -1,5 +1,8 @@
+"use client";
+
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -23,8 +26,8 @@ import {
   Layers,
 } from "lucide-react";
 
-const Dashboard = () => {
-  const navigate = useNavigate();
+export default function Dashboard() {
+  const router = useRouter();
   const [activeMenu, setActiveMenu] = useState("home");
 
   const menuItems = [
@@ -45,11 +48,15 @@ const Dashboard = () => {
   };
 
   const handleCreate = (type: string) => {
-    navigate(`/simulator?type=${type}`);
+    router.push(`/simulator?type=${type}`);
   };
 
   const handleLogout = () => {
-    navigate("/");
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+    }
+    router.push("/");
   };
 
   return (
@@ -58,7 +65,7 @@ const Dashboard = () => {
       <aside className="w-64 bg-card border-r border-border flex flex-col">
         {/* Logo */}
         <div className="p-4 border-b border-border">
-          <Link to="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2">
             <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
               <Zap className="w-6 h-6 text-primary-foreground" />
             </div>
@@ -82,7 +89,7 @@ const Dashboard = () => {
               key={item.id}
               onClick={() => {
                 setActiveMenu(item.id);
-                navigate(item.path);
+                router.push(item.path);
               }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
                 activeMenu === item.id
@@ -125,7 +132,7 @@ const Dashboard = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56 bg-card border-border">
                 <DropdownMenuItem
-                  onClick={() => navigate("/properties")}
+                  onClick={() => router.push("/properties")}
                   className="flex items-center gap-3 py-3 cursor-pointer hover:bg-muted"
                 >
                   <Building className="w-5 h-5 text-primary" />
@@ -243,6 +250,4 @@ const Dashboard = () => {
       </main>
     </div>
   );
-};
-
-export default Dashboard;
+}

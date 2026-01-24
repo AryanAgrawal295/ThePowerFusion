@@ -1,5 +1,8 @@
+"use client";
+
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -61,8 +64,8 @@ const mockProperties: Property[] = [
   },
 ];
 
-const Analysis = () => {
-  const navigate = useNavigate();
+export default function Analysis() {
+  const router = useRouter();
   const [activeMenu, setActiveMenu] = useState("analysis");
   const [selectedPropertyId, setSelectedPropertyId] = useState<string>("all");
   const [selectedRoomId, setSelectedRoomId] = useState<string>("all");
@@ -84,12 +87,16 @@ const Analysis = () => {
   }, [selectedPropertyId]);
 
   const handleLogout = () => {
-    navigate("/");
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+    }
+    router.push("/");
   };
 
   const handleMenuClick = (item: (typeof menuItems)[0]) => {
     setActiveMenu(item.id);
-    navigate(item.path);
+    router.push(item.path);
   };
 
   // Calculate totals for global view
@@ -119,7 +126,7 @@ const Analysis = () => {
       <aside className="w-64 bg-card border-r border-border flex flex-col">
         {/* Logo */}
         <div className="p-4 border-b border-border">
-          <Link to="/" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2">
             <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
               <Zap className="w-6 h-6 text-primary-foreground" />
             </div>
@@ -350,6 +357,4 @@ const Analysis = () => {
       </main>
     </div>
   );
-};
-
-export default Analysis;
+}

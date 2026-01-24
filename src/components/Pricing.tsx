@@ -1,6 +1,8 @@
+"use client";
+
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
 const plans = [
   {
@@ -108,7 +110,7 @@ const Pricing = () => {
                 className="w-full"
                 asChild
               >
-                <Link to="/signup">{plan.cta}</Link>
+                <Link href="/signup">{plan.cta}</Link>
               </Button>
             </div>
           ))}

@@ -1,9 +1,15 @@
+"use client";
+
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useMutation } from "@apollo/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Zap, User, Mail, Lock, Eye, EyeOff, ChevronDown, Check } from "lucide-react";
 import { toast } from "sonner";
+import { REGISTER_MUTATION } from "@/lib/graphql/queries/auth.queries";
+import { setAuthTokens } from "@/lib/auth";
 
 const plans = [
   { value: "single-room", label: "Single Room" },
@@ -11,7 +17,8 @@ const plans = [
   { value: "apartment", label: "Apartment" },
 ];
 
-const SignUp = () => {
+export default function SignUp() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -19,18 +26,39 @@ const SignUp = () => {
   const [selectedPlan, setSelectedPlan] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [showPlanDropdown, setShowPlanDropdown] = useState(false);
+  const [register, { loading }] = useMutation(REGISTER_MUTATION);
 
-  const handleSignUp = (e: React.FormEvent) => {
+  const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!fullName || !email || !password || !selectedPlan) {
-      toast.error("Please fill in all fields");
+    if (!fullName || !email || !password) {
+      toast.error("Please fill in all required fields");
       return;
     }
     if (!agreeTerms) {
       toast.error("Please agree to the terms and conditions");
       return;
     }
-    toast.success("Account created successfully! Redirecting...");
+
+    try {
+      const { data } = await register({
+        variables: {
+          input: {
+            name: fullName,
+            email,
+            password,
+          },
+        },
+      });
+
+      if (data?.register) {
+        // Store tokens
+        setAuthTokens(data.register.accessToken, data.register.refreshToken);
+        toast.success("Account created successfully! Redirecting...");
+        router.push("/dashboard");
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Registration failed. Please try again.");
+    }
   };
 
   return (
@@ -43,7 +71,7 @@ const SignUp = () => {
 
       <div className="w-full max-w-md relative z-10 animate-slide-up">
         {/* Logo */}
-        <Link to="/" className="flex items-center justify-center gap-2 mb-8 group">
+        <Link href="/" className="flex items-center justify-center gap-2 mb-8 group">
           <div className="relative">
             <Zap className="h-10 w-10 text-accent fill-accent group-hover:animate-pulse" />
             <div className="absolute inset-0 blur-lg bg-accent/30" />
@@ -165,22 +193,22 @@ const SignUp = () => {
               </button>
               <label className="text-sm text-muted-foreground">
                 I agree to the{" "}
-                <Link to="#" className="text-primary hover:underline">
+                <Link href="#" className="text-primary hover:underline">
                   Terms and Conditions
                 </Link>
               </label>
             </div>
 
             {/* Sign Up Button */}
-            <Button type="submit" variant="neon" size="lg" className="w-full">
-              Create My Account
+            <Button type="submit" variant="neon" size="lg" className="w-full" disabled={loading}>
+              {loading ? "Creating Account..." : "Create My Account"}
             </Button>
           </form>
 
           {/* Login Link */}
           <p className="text-center text-muted-foreground mt-6">
             Already have account?{" "}
-            <Link to="/login" className="text-primary font-medium hover:underline">
+            <Link href="/login" className="text-primary font-medium hover:underline">
               Sign In
             </Link>
           </p>
@@ -188,6 +216,4 @@ const SignUp = () => {
       </div>
     </div>
   );
-};
-
-export default SignUp;
+}

@@ -1,5 +1,8 @@
+"use client";
+
 import { useState, useCallback } from "react";
-import { Link, useSearchParams, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -76,9 +79,9 @@ const categories = [
 
 const ELECTRICITY_RATE = 8; // ₹ per kWh
 
-const Simulator = () => {
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
+export default function Simulator() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const roomName = searchParams.get("roomName") || "Living Room";
   
   const [placedDevices, setPlacedDevices] = useState<PlacedDevice[]>([]);
@@ -182,7 +185,7 @@ const Simulator = () => {
       {/* Top Bar */}
       <header className="h-16 border-b border-border bg-card/50 backdrop-blur-lg px-6 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
+          <Button variant="ghost" size="icon" onClick={() => router.back()}>
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div className="flex items-center gap-2">
@@ -402,6 +405,4 @@ const Simulator = () => {
       />
     </div>
   );
-};
-
-export default Simulator;
+}

@@ -1,24 +1,49 @@
+"use client";
+
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useMutation } from "@apollo/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Zap, Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
+import { LOGIN_MUTATION } from "@/lib/graphql/queries/auth.queries";
+import { setAuthTokens } from "@/lib/auth";
 
-const Login = () => {
-  const navigate = useNavigate();
+export default function Login() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [login, { loading }] = useMutation(LOGIN_MUTATION);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
       toast.error("Please fill in all fields");
       return;
     }
-    toast.success("Login successful! Redirecting...");
-    navigate("/dashboard");
+
+    try {
+      const { data } = await login({
+        variables: {
+          input: {
+            email,
+            password,
+          },
+        },
+      });
+
+      if (data?.login) {
+        // Store tokens
+        setAuthTokens(data.login.accessToken, data.login.refreshToken);
+        toast.success("Login successful! Redirecting...");
+        router.push("/dashboard");
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Login failed. Please check your credentials.");
+    }
   };
 
   const handleGoogleLogin = () => {
@@ -35,7 +60,7 @@ const Login = () => {
 
       <div className="w-full max-w-md relative z-10 animate-slide-up">
         {/* Logo */}
-        <Link to="/" className="flex items-center justify-center gap-2 mb-8 group">
+        <Link href="/" className="flex items-center justify-center gap-2 mb-8 group">
           <div className="relative">
             <Zap className="h-10 w-10 text-accent fill-accent group-hover:animate-pulse" />
             <div className="absolute inset-0 blur-lg bg-accent/30" />
@@ -94,14 +119,14 @@ const Login = () => {
 
             {/* Forgot Password */}
             <div className="text-right">
-              <Link to="#" className="text-sm text-primary hover:underline">
+              <Link href="#" className="text-sm text-primary hover:underline">
                 Forgot password?
               </Link>
             </div>
 
             {/* Login Button */}
-            <Button type="submit" variant="electric" size="lg" className="w-full">
-              Login
+            <Button type="submit" variant="electric" size="lg" className="w-full" disabled={loading}>
+              {loading ? "Logging in..." : "Login"}
             </Button>
           </form>
 
@@ -143,7 +168,7 @@ const Login = () => {
           {/* Sign Up Link */}
           <p className="text-center text-muted-foreground mt-6">
             Don't have account?{" "}
-            <Link to="/signup" className="text-primary font-medium hover:underline">
+            <Link href="/signup" className="text-primary font-medium hover:underline">
               Sign Up
             </Link>
           </p>
@@ -151,6 +176,4 @@ const Login = () => {
       </div>
     </div>
   );
-};
-
-export default Login;
+}
